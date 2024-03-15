@@ -5,23 +5,20 @@ import products from '../products';
 
 const Home = () => {
     return (
-        <>
-		<h1>Latest Products</h1>
-		<Row>
-			{products.map((product) => (
-				<Col
-					key={product._id}
-					sm={12}
-					md={6}
-					lg={4}
-					xl={3}
-				>
-					<Product product={product} />
-				</Col>
-			))}
-		</Row>
-    </>
-    )
+			<>
+				<h1>Latest Products</h1>
+				<div className="grid grid-cols-2 sm:grid-cols-1 md:grid-cols-3 gap-4 ">
+					{products.map((product) => (
+						<div
+							key={product.id}
+							className="bg-white p-4 rounded shadow"
+						>
+							<Product product={product} />
+						</div>
+					))}
+				</div>
+			</>
+		);
 };
 
 export default Home;
