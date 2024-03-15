@@ -6,8 +6,8 @@ import products from '../products';
 const Home = () => {
     return (
 			<>
-				<h1>Latest Products</h1>
-				<div className="grid grid-cols-2 sm:grid-cols-1 md:grid-cols-3 gap-4 ">
+				
+				<div className="grid grid-cols-2  sm:grid-cols-1 md:grid-cols-3 gap-4 ">
 					{products.map((product) => (
 						<div
 							key={product.id}
