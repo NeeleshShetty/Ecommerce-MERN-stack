@@ -3,16 +3,11 @@ import dotenv from 'dotenv'
 import mongoose from 'mongoose'
 import products from './data/products.js'
 import productListRouter from "./routes/products.route.js"
+import connectDB from './config/db.js';
 
 dotenv.config()
 
-mongoose.connect(
-	(process.env.MONGODB_URL)
-).then(() => {
-    console.log('Successfully connected to MongoDB');
-}).catch((error) => {
-    console.log(error.message);
-})
+connectDB();
 
 const port = process.env.PORT || 3000
 const app = express()
