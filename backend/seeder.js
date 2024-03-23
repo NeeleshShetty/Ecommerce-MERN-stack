@@ -6,7 +6,7 @@ import users from './data/users.js'
 import products from './data/products.js'
 import User from "./models/user.model.js"
 import Order from './models/order.model.js'
-import {Product} from './models/product.model.js'
+import Product from './models/product.model.js'
 
 dotenv.config()
 connectDB()
@@ -22,9 +22,12 @@ const importData = async () => {
       const adminUser = createdUsers[0]._id;
   
       const sampleProducts = products.map((product) => {
-        return { ...product, user: adminUser };
+        return {...product,user:adminUser};
       });
-  
+
+
+    //   console.log(sampleProducts);
+    //   console.log(createdUsers[0]._id);
       await Product.insertMany(sampleProducts);
   
       console.log('Data Imported!'.green.inverse);

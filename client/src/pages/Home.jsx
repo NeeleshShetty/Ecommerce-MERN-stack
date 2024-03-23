@@ -9,7 +9,7 @@ const Home = () => {
 	useEffect(() => {
 		const fetchdata = async () => {
 			try {
-				const { data } = await axios.get('/api/products/productslist')
+				const { data } = await axios.get('/api/products/getProducts')
 				setProducts(data)
 			} catch (error) {
 				console.log(error.message);
@@ -18,14 +18,14 @@ const Home = () => {
 		fetchdata()
 	}, []) 
 
-	console.log(products);
+	// console.log(products);
     return (
 			<>
 				
 				<div className="grid grid-cols-2  sm:grid-cols-1 md:grid-cols-3 gap-4 ">
 					{products.map((product) => (
 						<div
-							key={product.id}
+							key={product._id}
 							className="bg-white p-4 rounded shadow"
 						>
 							<Product product={product} />
