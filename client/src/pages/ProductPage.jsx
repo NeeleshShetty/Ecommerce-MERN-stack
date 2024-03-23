@@ -1,12 +1,12 @@
 import { useParams, Link } from "react-router-dom";
 import ArrowBackIcon from "@mui/icons-material/ArrowBack";
-import Rating from '@mui/material/Rating';
+import Rating from "@mui/material/Rating";
+import GradeIcon from "@mui/icons-material/Grade";
 import { Stack } from "@mui/system";
 import { useEffect, useState } from "react";
 import axios from "axios";
 const ProductPage = () => {
   const [product, setProduct] = useState({});
-  const value = product.rating
   const { id: productId } = useParams(); //useParams is a hook that gets the parameters from the URL. It returns an object with keys
   useEffect(() => {
     const fetchProduct = async () => {
@@ -20,8 +20,7 @@ const ProductPage = () => {
       }
     };
     fetchProduct();
-  }, []);
-
+  }, [product]);
 
   return (
     <>
@@ -41,9 +40,12 @@ const ProductPage = () => {
               <div className="bg-white p-4 rounded shadow">
                 <h3 className="text-xl font-semibold">{product.name}</h3>
                 <p className="text-gray-600">Price: ${product.price}</p>
-				<Stack>
-					<Rating value={product.rating} />
-				</Stack>
+                <Stack>
+                  <p>
+                    {product.rating}
+                    <GradeIcon sx={{ color: "gold" }} />
+                  </p>
+                </Stack>
                 <p className="text-gray-600">
                   Description: {product.description}
                 </p>
