@@ -1,30 +1,27 @@
 import { useParams, Link } from "react-router-dom";
 import ArrowBackIcon from "@mui/icons-material/ArrowBack";
-import Rating from "@mui/material/Rating";
 import GradeIcon from "@mui/icons-material/Grade";
 import { Stack } from "@mui/system";
-import { useEffect, useState } from "react";
-import axios from "axios";
+import { useGetProductDetailsQuery } from "../slice/productsApiSlice";
 const ProductPage = () => {
-  const [product, setProduct] = useState({});
   const { id: productId } = useParams(); //useParams is a hook that gets the parameters from the URL. It returns an object with keys
-  useEffect(() => {
-    const fetchProduct = async () => {
-      try {
-        const { data } = await axios.get(
-          `/api/products/getProduct/${productId}`
-        );
-        setProduct(data);
-      } catch (error) {
-        console.log(error.message);
-      }
-    };
-    fetchProduct();
-  }, [product]);
+  const {
+    data: product,
+    isLoading,
+    error,
+  } = useGetProductDetailsQuery(productId);
+
 
   return (
+    
     <>
-      <div className="bg-gray-100 p-3">
+    {isLoading ? (
+      <h1 className="text-center text-3xl h-[100vh] mt-52">Loading...</h1>
+    ):  error ? (
+      <div>{error?.data.message || error.error}</div>
+    ) : (
+      <>
+       <div className="bg-gray-100 p-3">
         <div className="container mx-auto">
           <div className="flex flex-col sm:flex-row gap-4 w-full">
             <Link
@@ -80,6 +77,9 @@ const ProductPage = () => {
           </div>
         </div>
       </div>
+      </>
+    )}
+     
     </>
   );
 };
