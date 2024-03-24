@@ -12,18 +12,14 @@ const Home = () => {
         <div>{error?.data.message || error.error}</div>
       ) : (
         <>
-				
-				<div className="grid grid-cols-2  sm:grid-cols-1 md:grid-cols-3 gap-4 ">
-					{products.map((product) => (
-						<div
-							key={product._id}
-							className="bg-white p-4 rounded shadow"
-						>
-							<Product product={product} />
-						</div>
-					))}
-				</div>
-			</>
+          <div className="grid grid-cols-2  sm:grid-cols-1 md:grid-cols-3 gap-4 ">
+            {products.map((product) => (
+              <div key={product._id} className="bg-white p-4 rounded shadow">
+                <Product product={product} />
+              </div>
+            ))}
+          </div>
+        </>
       )}
     </>
   );

@@ -21,11 +21,11 @@ const Header = () => {
                 className="ml-10 text-white hover:text-white focus:text-white focus:outline-none"
               >
                 <span className="sr-only">Cart</span>
-                
+                <FaShoppingCart className="inline-block fa-w-16 ml-2" />
                 {cartItems.length > 0 && (
-                  <Badge badgeContent={cartItems.length} color="secondary" >
-				  <FaShoppingCart className="inline-block fa-w-16 ml-2" />
-                 </Badge>
+                  <Badge className="ml-3 mb-3" badgeContent={cartItems.length} color="secondary">
+                    
+                  </Badge>
                 )}
               </Link>
               <Link
