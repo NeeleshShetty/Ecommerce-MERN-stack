@@ -1,11 +1,9 @@
-import { useState, useEffect } from "react";
 import Product from "../components/Product";
 import { useGetProductsQuery } from "../slice/productsApiSlice";
-
 const Home = () => {
   const { data: products, isLoading, error } = useGetProductsQuery();
-
   // console.log(products);
+
   return (
     <>
       {isLoading ? (
