@@ -3,13 +3,17 @@ import { Link } from "react-router-dom";
 import { Card, Button, Select, MenuItem } from "@mui/material";
 import { FaTrash } from "react-icons/fa";
 import { useDispatch, useSelector } from "react-redux";
-import { addToCart } from "../slice/cartSlice";
+import { addToCart,removeFromCart } from "../slice/cartSlice";
 
 const CartPage = () => {
   const { cartItems } = useSelector((state) => state.cart);
   const dispatch = useDispatch()
+
   const addToCartHandler = async (product,qty)=>{
     dispatch(addToCart({...product,qty}))
+  }
+  const removeFromCartHandler = (id)=>{
+    dispatch(removeFromCart(id))
   }
   return (
     <div className="flex flex-wrap justify-between h-[100vh]">
