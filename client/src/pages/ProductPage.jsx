@@ -11,20 +11,18 @@ const ProductPage = () => {
   const [qty, setQty] = useState(0);
   const { id: productId } = useParams(); //useParams is a hook that gets the parameters from the URL. It returns an object with keys
 
-  const dispatch = useDispatch()
-  const navigate = useNavigate()
+  const dispatch = useDispatch();
+  const navigate = useNavigate();
   const {
     data: product,
     isLoading,
     error,
   } = useGetProductDetailsQuery(productId);
 
-  const addToCartHandler = ()=>{
-    dispatch(addToCart({...product,qty})
-    )
-    navigate('/cart')
-  }
-
+  const addToCartHandler = () => {
+    dispatch(addToCart({ ...product, qty }));
+    navigate("/cart");
+  };
 
   return (
     <>
