@@ -8,7 +8,7 @@ import { useState } from "react";
 import { addToCart } from "../slice/cartSlice";
 
 const ProductPage = () => {
-  const [qty, setQty] = useState(0);
+  const [qty, setQty] = useState(1);
   const { id: productId } = useParams(); //useParams is a hook that gets the parameters from the URL. It returns an object with keys
 
   const dispatch = useDispatch();

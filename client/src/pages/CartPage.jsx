@@ -3,20 +3,20 @@ import { Link } from "react-router-dom";
 import { Card, Button, Select, MenuItem } from "@mui/material";
 import { FaTrash } from "react-icons/fa";
 import { useDispatch, useSelector } from "react-redux";
-import { addToCart,removeFromCart } from "../slice/cartSlice";
+import { addToCart, removeFromCart } from "../slice/cartSlice";
 
 const CartPage = () => {
   const { cartItems } = useSelector((state) => state.cart);
-  const dispatch = useDispatch()
+  const dispatch = useDispatch();
 
-  const addToCartHandler = async (product,qty)=>{
-    dispatch(addToCart({...product,qty}))
-  }
-  const removeFromCartHandler = (id)=>{
-    dispatch(removeFromCart(id))
-  }
+  const addToCartHandler = async (product, qty) => {
+    dispatch(addToCart({ ...product, qty }));
+  };
+  const removeFromCartHandler = (id) => {
+    dispatch(removeFromCart(id));
+  };
   return (
-    <div className="flex flex-wrap justify-between h-[100vh]">
+    <div className="flex flex-wrap justify-between h-[100vh] p-3">
       <div className="w-full md:w-8/12">
         <h1 className="text-2xl font-bold mb-5">Shopping Cart</h1>
         {cartItems.length === 0 ? (
@@ -39,7 +39,12 @@ const CartPage = () => {
                   </div>
                   <div className="w-1/4">${item.price}</div>
                   <div className="w-1/4">
-                    <Select value={item.qty} onChange={(e)=>addToCartHandler(item,Number(e.target.value))}>
+                    <Select
+                      value={item.qty}
+                      onChange={(e) =>
+                        addToCartHandler(item, Number(e.target.value))
+                      }
+                    >
                       {[...Array(item.countInStock).keys()].map((x) => (
                         <MenuItem key={x + 1} value={x + 1}>
                           {x + 1}
@@ -63,7 +68,7 @@ const CartPage = () => {
       </div>
       <div className="w-full md:w-4/12">
         {cartItems.length ? (
-          <Card className="mb-5">
+          <Card className="mb-5 sm:mt-10 mt-52 ">
             <ul className="list-none">
               <li className="border-b border-gray-200 py-3">
                 <h2 className="text-lg font-semibold">
