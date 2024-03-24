@@ -25,7 +25,7 @@ const cartSlice = createSlice({
             // : The reduce() method in JavaScript is used to reduce an array to a single value. It iterates over each element of the array and accumulates a result, which can be anything from a single value to a complex data structure.(acc,item)=> acc + item.price * item.qty: This is the callback function provided to reduce(). It takes two parameters: acc (short for accumulator) and item. For each item in cartItems, it calculates the total price by multiplying the price of each item (item.price) by its quantity (item.qty) and adds it to the accumulator (acc). This way, it accumulates the total price of all items in the cart. 0: This is the initial value for the accumulator. In this case, it starts from 0.
 
             //calculate shipping price (if order>$100 then free other wise $10 shipping price)
-            state.shippingPrice = addDecimals(state.shippingPrice > 100 ? 0 : 10)
+            state.shippingPrice = addDecimals(state.itemsPrice > 100 ? 0 : 10)
 
             // calculate tax price (15%tax)
             state.taxprice = addDecimals(Number((0.15 * state.itemsPrice).toFixed(2)))
