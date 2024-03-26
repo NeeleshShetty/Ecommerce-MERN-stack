@@ -45,7 +45,7 @@ import jwt from 'jsonwebtoken';
 // @route POST/api/users/logout
 // @access private
 const logoutUser = async (req, res, next) => {
-	res.cookie()
+	res.clearCookie('access_token').status(200).json({message:"Logout Successfull"})
 };
 // @desc    Register a new user
 // @route   POST /api/users
