@@ -6,7 +6,7 @@ import jwt from 'jsonwebtoken';
 // @desc authUser
 // @route POST/api/users/login
 // @access public
- const authUser = async (req, res, next) => {
+const authUser = async (req, res, next) => {
 	const { email, password } = req.body;
 	try {
 		const user = await User.findOne({ email });
@@ -45,67 +45,98 @@ import jwt from 'jsonwebtoken';
 // @route POST/api/users/logout
 // @access private
 const logoutUser = async (req, res, next) => {
-	res.clearCookie('access_token').status(200).json({message:"Logout Successfull"})
+	res
+		.clearCookie('access_token')
+		.status(200)
+		.json({ message: 'Logout Successfull' });
 };
+
 // @desc    Register a new user
 // @route   POST /api/users
 // @access  Public
-const registerUser = async (req, res) => {
-  res.send('register user');
+const registerUser = async (req, res,next) => {
+	const { name, email, password } = req.body;
+	try {
+		const userExsits = await User.findOne({ email });
+		// const hashedPassword = await bcrypt.hash(password, 10);
+
+		if (userExsits) {
+			return next(errorHandler(400, 'User already exsists'));
+		}
+
+		const user = await User.create({
+			name,
+			email,
+			password
+        });
+        
+
+		if (user) {
+			res.status(201).json({
+				_id: user._id,
+				name: user.name,
+				email: user.email,
+				isAdmin: user.isAdmin,
+				
+			});
+        } else {
+            return res.status(404).json("User not Registered")
+        }
+	} catch (error) {
+		next(error);
+	}
 };
 
 // @desc    Get user profile
 // @route   GET /api/users/profile
 // @access  Private
 const getUserProfile = async (req, res) => {
-  res.send('get user profile');
+	res.send('get user profile');
 };
 
 // @desc    Update user profile
 // @route   PUT /api/users/profile
 // @access  Private
 const updateUserProfile = async (req, res) => {
-  res.send('update user profile');
+	res.send('update user profile');
 };
 
 // @desc    Get all users
 // @route   GET /api/users
 // @access  Private/Admin
 const getUsers = async (req, res) => {
-  res.send('get users');
+	res.send('get users');
 };
 
 // @desc    Delete user
 // @route   DELETE /api/users/:id
 // @access  Private/Admin
 const deleteUser = async (req, res) => {
-  res.send('delete user');
+	res.send('delete user');
 };
 
 // @desc    Get user by ID
 // @route   GET /api/users/:id
 // @access  Private/Admin
 const getUserById = async (req, res) => {
-  res.send('get user by id');
+	res.send('get user by id');
 };
 
 // @desc    Update user
 // @route   PUT /api/users/:id
 // @access  Private/Admin
 const updateUser = async (req, res) => {
-  res.send('update user');
+	res.send('update user');
 };
 
-
-
 export {
-  authUser,
-  registerUser,
-  getUserProfile,
-  updateUserProfile,
-  getUsers,
-  deleteUser,
-  getUserById,
-    updateUser,
-    logoutUser
+	authUser,
+	registerUser,
+	getUserProfile,
+	updateUserProfile,
+	getUsers,
+	deleteUser,
+	getUserById,
+	updateUser,
+	logoutUser,
 };
