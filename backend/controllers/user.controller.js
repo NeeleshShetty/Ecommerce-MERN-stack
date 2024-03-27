@@ -6,36 +6,27 @@ import jwt from 'jsonwebtoken';
 // @desc authUser
 // @route POST/api/users/login
 // @access public
-const authUser = async (req, res, next) => {
-	const { email, password } = req.body;
+ const authUser = async (req, res, next) => {
+	 const {name,email, password } = req.body;
+	 console.log(req.body.email);
 	try {
-		const user = await User.findOne({ email });
+		const user = await User.findOne({ name });
+		console.log(user);
+		if (!user) return next(errorHandler(404, 'User not found'));
+
+		// const useremail = await User.findOne({ email });
+		// if (!useremail) return next(errorHandler(404, 'User not found'));
+
 		const validPassword = bcrypt.compareSync(password, user.password);
+		if (!validPassword) return next(errorHandler(401, 'wrong credentials'));
+		const token = jwt.sign({ id: user._id }, process.env.JWT_SECRET);
 
-		if (!validPassword) {
-			return next(errorHandler(401, 'Wrong Credentials'));
-		}
-
-		if (user) {
-			const token = jwt.sign({ userId: user._id }, process.env.JWT_SECRET, {
-				expiresIn: '1d',
-			});
-
-			res.cookie('access_token', token, {
-				httpOnly: true,
-				secure: process.env.NODE_ENV !== 'development',
-				sameSite: 'strict',
-				maxAge: 1 * 30 * 24 * 60 * 60 * 1000,
-			});
-			res.status(200).json({
-				_id: user._id,
-				name: user.name,
-				email: user.email,
-				isAdmin: user.isAdmin,
-			});
-		} else {
-			next(errorHandler(200, 'Invalid email or password'));
-		}
+		const { password: hashedPassword, ...rest } = user._doc;
+		const expiryDate = new Date(Date.now() + 3600000); // 1 hour
+		res
+			.cookie('access_token', token, { httpOnly: true, expires: expiryDate })
+			.status(200)
+			.json(rest);
 	} catch (error) {
 		next(error);
 	}
@@ -55,50 +46,72 @@ const logoutUser = async (req, res, next) => {
 // @route   POST /api/users
 // @access  Public
 const registerUser = async (req, res,next) => {
-	const { name, email, password } = req.body;
-	try {
-		const userExsits = await User.findOne({ email });
-		// const hashedPassword = await bcrypt.hash(password, 10);
+	const { name, password, email } = req.body;
+	const user = await User.findOne({ name })
+	if (user) {
+		return res.json({message:"Username already exsists"})
+	}
+		const hashPassword = bcrypt.hashSync(password, 10);
+		const newUser = new User({ name, password: hashPassword, email });
 
-		if (userExsits) {
-			return next(errorHandler(400, 'User already exsists'));
+		try {
+			await newUser.save();
+			res.status(200).json({ message: 'New user created!' });
+		} catch (error) {
+			next(error);
 		}
+};
 
-		const user = await User.create({
-			name,
-			email,
-			password
-        });
-        
-
+// @desc    Get user profile
+// @route   GET /api/users/profile
+// @access  Private
+const getUserProfile = async (req, res, next) => {
+	// res.send("user profile")
+	
+	try {
+		const user = await User.findById(req.user.id)
+		console.log(req.user.id);
 		if (user) {
 			res.status(201).json({
 				_id: user._id,
 				name: user.name,
 				email: user.email,
 				isAdmin: user.isAdmin,
-				
 			});
-        } else {
-            return res.status(404).json("User not Registered")
-        }
+		}
 	} catch (error) {
-		next(error);
+		next(error)
 	}
-};
-
-// @desc    Get user profile
-// @route   GET /api/users/profile
-// @access  Private
-const getUserProfile = async (req, res) => {
-	res.send('get user profile');
 };
 
 // @desc    Update user profile
 // @route   PUT /api/users/profile
 // @access  Private
-const updateUserProfile = async (req, res) => {
-	res.send('update user profile');
+const updateUserProfile = async (req, res,next) => {
+	try {
+		const user = await User.findById(req.user.id)
+		console.log(user);
+		if (user) {
+			user.name =  req.body.name || user.name
+			user.email = req.body.email || user.email
+
+			if (req.body.password) {
+				user.password = req.body.password
+			}
+			const updatedUser = await user.save()
+			
+			// console.log(updatedUser);
+
+			res.status(200).json({
+				_id:updatedUser._id,
+				name: updatedUser.name,
+				email: updatedUser.email,
+				isAdmin:updatedUser.isAdmin
+			})
+		}
+	} catch (error) {
+		next(error)
+	}
 };
 
 // @desc    Get all users
