@@ -90,7 +90,6 @@ const getUserProfile = async (req, res, next) => {
 const updateUserProfile = async (req, res,next) => {
 	try {
 		const user = await User.findById(req.user.id)
-		console.log(user);
 		if (user) {
 			user.name =  req.body.name || user.name
 			user.email = req.body.email || user.email
@@ -99,8 +98,7 @@ const updateUserProfile = async (req, res,next) => {
 				user.password = req.body.password
 			}
 			const updatedUser = await user.save()
-			
-			// console.log(updatedUser);
+		
 
 			res.status(200).json({
 				_id:updatedUser._id,
