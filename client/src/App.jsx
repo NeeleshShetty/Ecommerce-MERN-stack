@@ -8,6 +8,7 @@ import LoginPage from './pages/LoginPage';
 import { ToastContainer } from 'react-toastify';
 import 'react-toastify/dist/ReactToastify.css';
 import RegisterPage from './pages/RegisterPage';
+import ShippingPage from './pages/ShippingPage';
 
 const App = () => {
 	return (
@@ -37,6 +38,7 @@ const App = () => {
 						path="/register"
 						element={<RegisterPage />}
 					/>
+					<Route path='/shipping' element={<ShippingPage />} />
 				</Routes>
 				<Footer />
 			</BrowserRouter>

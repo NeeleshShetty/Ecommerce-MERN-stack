@@ -114,7 +114,7 @@ const RegisterPage = () => {
 					Already a  Customer? <Link className='underline text-blue-500' to="/login">Login</Link>
 				</Grid>
 			</Grid>
-			{/* {isLoading && <div>Loading...</div>} */}
+			
 		</Container>
 	);
 };
