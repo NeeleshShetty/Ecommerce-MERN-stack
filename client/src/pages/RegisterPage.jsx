@@ -1,47 +1,41 @@
-import { useState } from 'react';
-import { Link, useNavigate } from 'react-router-dom';
+import { useState, useEffect } from 'react';
+import { Link, Navigate, useLocation, useNavigate } from 'react-router-dom';
 import { Button, TextField, Container, Grid, Typography } from '@mui/material';
-import { useDispatch } from 'react-redux';
+import { useDispatch, useSelector } from 'react-redux';
 import { setCredentials } from '../slice/authSlice';
 import { toast } from 'react-toastify';
 
-const LoginPage = () => {
-	const [loading, setLoading] = useState(true);
-	const [name, setname] = useState('');
+const RegisterPage = () => {
+	const [name, setName] = useState('');
+	const [email, setEmail] = useState('');
 	const [password, setPassword] = useState('');
-
-	const dispatch = useDispatch();
-	const navigate = useNavigate();
-
+    const [loading, setLoading] = useState(true);
+    const navigate = useNavigate()
 	const handleSubmit = async (e) => {
-		e.preventDefault();
+        e.preventDefault();
+        if (!name || !password || !email) {
+					return toast.error('All fields are required');
+				}
 		try {
-			setLoading(true);
-			if (!name || !password) {
-				return toast.error('Enter name and Password');
-			}
-			const res = await fetch(`/api/users/login`, {
+			
+			const res = await fetch('/api/users/register', {
 				method: 'POST',
 				headers: {
 					'Content-Type': 'application/json',
 				},
-				body: JSON.stringify({ name, password }),
+				body: JSON.stringify({ name, email, password }),
 			});
 
 			const data = await res.json();
-
 			if (data.success === false) {
 				return console.log('Login not successfull');
 			}
-			dispatch(setCredentials({ ...data }));
-			toast.success('Login Successfull');
-			navigate('/');
-			setLoading(false);
-		} catch (err) {
-			toast.error(err.message);
+            setLoading(false);
+            navigate('/login')
+		} catch (error) {
+			toast.error('Registration Failed');
 		}
 	};
-
 	return (
 		<Container
 			className="mt-10"
@@ -52,7 +46,7 @@ const LoginPage = () => {
 				align="center"
 				gutterBottom
 			>
-				Sign In
+				Sign Up
 			</Typography>
 			<form onSubmit={handleSubmit}>
 				<Grid
@@ -65,11 +59,10 @@ const LoginPage = () => {
 					>
 						<TextField
 							className="w-full"
-							id="filled-basic"
 							label="UserName"
 							variant="filled"
 							value={name}
-							onChange={(e) => setname(e.target.value)}
+							onChange={(e) => setName(e.target.value)}
 						/>
 					</Grid>
 					<Grid
@@ -78,8 +71,20 @@ const LoginPage = () => {
 					>
 						<TextField
 							className="w-full"
+							label="Email"
+							variant="filled"
+							value={email}
+							onChange={(e) => setEmail(e.target.value)}
+						/>
+					</Grid>
+					<Grid
+						item
+						xs={12}
+					>
+						<TextField
+							className="w-full"
+							id="filled-basic"
 							label="Password"
-							type="password"
 							variant="filled"
 							value={password}
 							onChange={(e) => setPassword(e.target.value)}
@@ -95,7 +100,7 @@ const LoginPage = () => {
 							color="primary"
 							fullWidth
 						>
-							Sign In
+							Sign Up
 						</Button>
 					</Grid>
 				</Grid>
@@ -106,13 +111,7 @@ const LoginPage = () => {
 				className="py-3"
 			>
 				<Grid item>
-					New Customer?{' '}
-					<Link
-						className="underline text-blue-500"
-						to="/register"
-					>
-						Register
-					</Link>
+					Already a  Customer? <Link className='underline text-blue-500' to="/login">Login</Link>
 				</Grid>
 			</Grid>
 			{/* {isLoading && <div>Loading...</div>} */}
@@ -120,4 +119,4 @@ const LoginPage = () => {
 	);
 };
 
-export default LoginPage;
+export default RegisterPage;
