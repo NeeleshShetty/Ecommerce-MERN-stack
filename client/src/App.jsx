@@ -10,6 +10,7 @@ import 'react-toastify/dist/ReactToastify.css';
 import RegisterPage from './pages/RegisterPage';
 import ShippingPage from './pages/ShippingPage';
 import PrivateRoute from './components/PrivateRoute';
+import PaymentPage from './pages/PaymentPage';
 
 const App = () => {
 	return (
@@ -48,6 +49,7 @@ const App = () => {
 							path="/shipping"
 							element={<ShippingPage />}
 						/>
+						<Route path='/payment' element={<PaymentPage />} />
 					</Route>
 				</Routes>
 				<Footer />
