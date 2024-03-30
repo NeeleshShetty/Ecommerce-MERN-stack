@@ -9,6 +9,7 @@ import { ToastContainer } from 'react-toastify';
 import 'react-toastify/dist/ReactToastify.css';
 import RegisterPage from './pages/RegisterPage';
 import ShippingPage from './pages/ShippingPage';
+import PrivateRoute from './components/PrivateRoute';
 
 const App = () => {
 	return (
@@ -38,7 +39,16 @@ const App = () => {
 						path="/register"
 						element={<RegisterPage />}
 					/>
-					<Route path='/shipping' element={<ShippingPage />} />
+
+					<Route
+						path=""
+						element={<PrivateRoute />}
+					>
+						<Route
+							path="/shipping"
+							element={<ShippingPage />}
+						/>
+					</Route>
 				</Routes>
 				<Footer />
 			</BrowserRouter>

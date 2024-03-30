@@ -4,11 +4,13 @@ import { Button, TextField, Container, Grid, Typography } from '@mui/material';
 import { useDispatch } from 'react-redux';
 import { setCredentials } from '../slice/authSlice';
 import { toast } from 'react-toastify';
-
+import { useSelector } from 'react-redux';
 const LoginPage = () => {
 	const [loading, setLoading] = useState(true);
 	const [name, setname] = useState('');
 	const [password, setPassword] = useState('');
+	const {userInfo} = useSelector(state=> state.auth)
+	const userExists = localStorage.getItem('userInfo')
 
 	const dispatch = useDispatch();
 	const navigate = useNavigate();
@@ -19,6 +21,9 @@ const LoginPage = () => {
 			setLoading(true);
 			if (!name || !password) {
 				return toast.error('Enter name and Password');
+			}
+			if (userExists) {
+				return toast.error('User already logged in')
 			}
 			const res = await fetch(`/api/users/login`, {
 				method: 'POST',
@@ -31,7 +36,7 @@ const LoginPage = () => {
 			const data = await res.json();
 
 			if (data.success === false) {
-				return console.log('Login not successfull');
+				return toast.error('Invalid Credentials')
 			}
 			dispatch(setCredentials({ ...data }));
 			toast.success('Login Successfull');

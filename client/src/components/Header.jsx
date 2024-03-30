@@ -14,8 +14,10 @@ const Header = () => {
 	const navigate = useNavigate()
 	const { cartItems } = useSelector((state) => state.cart);
 	const { userInfo } = useSelector((state) => state.auth);
+	const userExists = localStorage.getItem('userInfo');
 
-	const handleLogout = async() => {
+
+	const handleLogout = async () => {
 		try {
 			await fetch('/api/users/logout', {
 				method: 'POST'
@@ -58,7 +60,7 @@ const Header = () => {
 							</div>
 
 							<div>
-								{userInfo ? (
+								{userExists  ? (
 									<div className="text-white flex gap-4">
 										<div
 											onClick={() => setShow(!show)}
@@ -73,16 +75,17 @@ const Header = () => {
 										{show && <div className="p-2 cursor-pointer">
 											<div><Link to={'/profile'}>Profile</Link></div>
 											<div onClick={handleLogout}>Logout</div>
+											
 										</div> }
 									</div>
-								) : (
+								): (
 									<Link
 										to="/login"
 										className="ml-4  text-white hover:text-white focus:text-white focus:outline-none"
 									>
 										<FaUser className="inline-block fa-w-16 ml-2 mt-6" />
 									</Link>
-								)}
+								)  }
 							</div>
 						</div>
 					</div>

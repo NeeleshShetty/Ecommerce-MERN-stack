@@ -3,11 +3,11 @@ import { Button } from '@mui/material';
 import { useDispatch, useSelector } from 'react-redux';
 import { useNavigate } from 'react-router-dom';
 import { saveShippingAddress } from '../slice/cartSlice';
+import CheckoutSteps from '../components/CheckoutSteps';
 
 const ShippingScreen = () => {
 	const cart = useSelector((state) => state.cart);
 	const { shippingAddress } = cart;
-	console.log(shippingAddress);
 
 	const [address, setAddress] = useState(shippingAddress?.address || '');
 	const [city, setCity] = useState(shippingAddress?.city || '');
@@ -25,6 +25,7 @@ const ShippingScreen = () => {
 
 	return (
 		<div className="max-w-[600px] mx-auto h-[100vh] ">
+			<CheckoutSteps step1 step2 />
 			<form
 				onSubmit={submitHandler}
 				className="flex flex-col m l-auto mr-auto items-center gap-2 mt-5"
