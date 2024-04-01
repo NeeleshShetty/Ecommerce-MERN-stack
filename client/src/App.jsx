@@ -11,6 +11,8 @@ import RegisterPage from './pages/RegisterPage';
 import ShippingPage from './pages/ShippingPage';
 import PrivateRoute from './components/PrivateRoute';
 import PaymentPage from './pages/PaymentPage';
+import PlaceOrderPage from './pages/PlaceOrderPage';
+import OrderPage from './pages/OrderPage';
 
 const App = () => {
 	return (
@@ -49,7 +51,15 @@ const App = () => {
 							path="/shipping"
 							element={<ShippingPage />}
 						/>
-						<Route path='/payment' element={<PaymentPage />} />
+						<Route
+							path="/payment"
+							element={<PaymentPage />}
+						/>
+						<Route
+							path="/placeorder"
+							element={<PlaceOrderPage />}
+						/>
+						<Route path='/order/:id' element={<OrderPage />} />
 					</Route>
 				</Routes>
 				<Footer />
