@@ -13,6 +13,7 @@ import PrivateRoute from './components/PrivateRoute';
 import PaymentPage from './pages/PaymentPage';
 import PlaceOrderPage from './pages/PlaceOrderPage';
 import OrderPage from './pages/OrderPage';
+import ProfilePage from './pages/ProfilePage';
 
 const App = () => {
 	return (
@@ -59,7 +60,14 @@ const App = () => {
 							path="/placeorder"
 							element={<PlaceOrderPage />}
 						/>
-						<Route path='/order/:id' element={<OrderPage />} />
+						<Route
+							path="/order/:id"
+							element={<OrderPage />}
+						/>
+						<Route
+							path="/profile"
+							element={<ProfilePage />}
+						/>
 					</Route>
 				</Routes>
 				<Footer />

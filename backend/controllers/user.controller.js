@@ -8,10 +8,8 @@ import jwt from 'jsonwebtoken';
 // @access public
  const authUser = async (req, res, next) => {
 	 const {name,email, password } = req.body;
-	 console.log(req.body.email);
 	try {
 		const user = await User.findOne({ name });
-		console.log(user);
 		if (!user) return next(errorHandler(404, 'User not found'));
 
 		// const useremail = await User.findOne({ email });
@@ -96,6 +94,7 @@ const updateUserProfile = async (req, res,next) => {
 
 			if (req.body.password) {
 				user.password = req.body.password
+				user.password = bcrypt.hashSync(user.password,10)
 			}
 			const updatedUser = await user.save()
 		
