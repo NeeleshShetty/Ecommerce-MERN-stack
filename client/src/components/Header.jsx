@@ -1,36 +1,36 @@
 import { Navbar, Nav, Container } from 'react-bootstrap';
 import { FaShoppingCart, FaUser } from 'react-icons/fa';
 import { Link } from 'react-router-dom';
-import { useSelector,useDispatch } from 'react-redux';
+import { useSelector, useDispatch } from 'react-redux';
 import { Badge, Menu, MenuItem, Paper } from '@mui/material';
 import { logout } from '../slice/authSlice';
-import { clearCartItems } from '../slice/cartSlice'; 
+import { clearCartItems } from '../slice/cartSlice';
 import { useState } from 'react';
 import { toast } from 'react-toastify';
 import { useNavigate } from 'react-router-dom';
+import DropdownMenu from './DropdownMenu';
 const Header = () => {
-	const [show, setShow] = useState(false)
-	const dispatch = useDispatch()
-	const navigate = useNavigate()
+	const [show, setShow] = useState(false);
+	const dispatch = useDispatch();
+	const navigate = useNavigate();
 	const { cartItems } = useSelector((state) => state.cart);
 	const { userInfo } = useSelector((state) => state.auth);
 	const userExists = localStorage.getItem('userInfo');
 
-
 	const handleLogout = async () => {
 		try {
 			await fetch('/api/users/logout', {
-				method: 'POST'
+				method: 'POST',
 			});
 
-			dispatch(logout())
-			dispatch(clearCartItems())
-			navigate('/login')
-			toast.success("Logout Successful")
+			dispatch(logout());
+			dispatch(clearCartItems());
+			navigate('/login');
+			toast.success('Logout Successful');
 		} catch (error) {
-			toast.error(error.message)
+			toast.error(error.message);
 		}
-	}
+	};
 
 	return (
 		<header>
@@ -61,32 +61,18 @@ const Header = () => {
 							</div>
 
 							<div>
-								{userExists  ? (
+								{userExists ? (
 									<div className="text-white flex gap-4">
-										<div
-											onClick={() => setShow(!show)}
-											className="text-gray-500 mt-5 uppercase flex gap-2 cursor-pointer "
-										>
-											<div>{userInfo.name}</div>
-											<div>
-												<FaUser  size={25}/>
-											</div>
-										</div>
-										
-										{show && <div className="p-2 cursor-pointer">
-											<div><Link to={'/profile'}>Profile</Link></div>
-											<div onClick={handleLogout}>Logout</div>
-											
-										</div> }
+										<DropdownMenu handleLogout={handleLogout} />
 									</div>
-								): (
+								) : (
 									<Link
 										to="/login"
 										className="ml-4  text-white hover:text-white focus:text-white focus:outline-none"
 									>
 										<FaUser className="inline-block fa-w-16 ml-2 mt-6" />
 									</Link>
-								)  }
+								)}
 							</div>
 						</div>
 					</div>

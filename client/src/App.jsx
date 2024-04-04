@@ -10,10 +10,12 @@ import 'react-toastify/dist/ReactToastify.css';
 import RegisterPage from './pages/RegisterPage';
 import ShippingPage from './pages/ShippingPage';
 import PrivateRoute from './components/PrivateRoute';
+import AdminRoute from './components/AdminRoute'
 import PaymentPage from './pages/PaymentPage';
 import PlaceOrderPage from './pages/PlaceOrderPage';
 import OrderPage from './pages/OrderPage';
 import ProfilePage from './pages/ProfilePage';
+import OrderListPage from './pages/OrderListPage';
 
 const App = () => {
 	return (
@@ -68,6 +70,10 @@ const App = () => {
 							path="/profile"
 							element={<ProfilePage />}
 						/>
+					</Route>
+
+					<Route path='' element={<AdminRoute />} >
+							<Route path='/admin/orderlist' element={<OrderListPage />} />
 					</Route>
 				</Routes>
 				<Footer />

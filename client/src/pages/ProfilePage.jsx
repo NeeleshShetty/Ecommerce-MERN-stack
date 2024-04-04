@@ -46,7 +46,8 @@ const ProfilePage = () => {
 		} catch (error) {
 			toast.error('Failed to fetch Orders');
 		}
-	}, []);
+  }, []);
+
 
 	const submitHandler = async (e) => {
 		e.preventDefault();
