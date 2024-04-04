@@ -45,11 +45,11 @@ const addOrderItems = async (req, res, next) => {
 };
 
 // @desc    Get logged in user orders
-// @route   GET /api/orders/myorders
+// @route   GET /api/orders/mine
 // @access  Private
 const getMyOrders = async (req, res, next) => {
 	try {
-		const orders = await Order.find({ user: req.user._id });
+		 const orders = await Order.find({user:req.user.id})
 		res.status(201).json(orders);
 	} catch (error) {
 		next(error);
