@@ -11,8 +11,8 @@ import {
 const OrderPage = () => {
 	const { id: orderId } = useParams();
 	const [order, setOrder] = useState({});
-	const [errorPaypal, setErrorPaypal] = useState(false);
-	const [loadingPaypal, setLoadingPaypal] = useState(false);
+	const [loadingDeliver, setLoadingDeliver] = useState(false);
+	const [deliverOrder, setDeliverOrder] = useState(false);
 
 	const [payOrder, { isLoading: loadingPay }] = usePayOrderMutation();
 
@@ -20,8 +20,7 @@ const OrderPage = () => {
 
 	const [{ isPending }, paypalDispatch] = usePayPalScriptReducer();
 
-	
-  const {
+	const {
 		data: paypal,
 		isLoading: loadingPayPal,
 		error: errorPayPal,
@@ -42,25 +41,25 @@ const OrderPage = () => {
 	}, []);
 
 	//paypal integration
-	 useEffect(() => {
-			if (!errorPayPal && !loadingPayPal && paypal.clientId) {
-				const loadPaypalScript = async () => {
-					paypalDispatch({
-						type: 'resetOptions',
-						value: {
-							'client-id': paypal.clientId,
-							currency: 'USD',
-						},
-					});
-					paypalDispatch({ type: 'setLoadingStatus', value: 'pending' });
-				};
-				if (order && !order.isPaid) {
-					if (!window.paypal) {
-						loadPaypalScript();
-					}
+	useEffect(() => {
+		if (!errorPayPal && !loadingPayPal && paypal.clientId) {
+			const loadPaypalScript = async () => {
+				paypalDispatch({
+					type: 'resetOptions',
+					value: {
+						'client-id': paypal.clientId,
+						currency: 'USD',
+					},
+				});
+				paypalDispatch({ type: 'setLoadingStatus', value: 'pending' });
+			};
+			if (order && !order.isPaid) {
+				if (!window.paypal) {
+					loadPaypalScript();
 				}
 			}
-		}, [errorPayPal, loadingPayPal, order, paypal, paypalDispatch]);
+		}
+	}, [errorPayPal, loadingPayPal, order, paypal, paypalDispatch]);
 
 	function onApprove(data, actions) {
 		return actions.order.capture().then(async function (details) {
@@ -87,12 +86,12 @@ const OrderPage = () => {
 		});
 	}
 
-	async function onApproveTest() {
-		await payOrder({ orderId, details: { payer: {} } });
-		refetch();
+	// async function onApproveTest() {
+	// 	await payOrder({ orderId, details: { payer: {} } });
+	// 	refetch();
 
-		toast.success('Order is paid');
-	}
+	// 	toast.success('Order is paid');
+	// }
 
 	function onError(err) {
 		toast.error(err.message);
@@ -111,6 +110,14 @@ const OrderPage = () => {
 				return orderID;
 			});
 	}
+
+	const deliverHandler = async () => {
+		const res = await fetch(`/api/orders/${orderId}/deliver`, {
+			method: 'PUT',
+		});
+		await res.json()
+		window.location.reload()
+	};
 
 	return (
 		<>
@@ -240,17 +247,17 @@ const OrderPage = () => {
 											) : (
 												<>
 													<div>
-															{/* <button className='bg-gray-700 p-3 rounded text-white'
+														{/* <button className='bg-gray-700 p-3 rounded text-white'
 																onClick={()=>onApproveTest()}>
 															Test Pay order
 														</button> */}
 													</div>
-													<div className='mt-2'>
-															<PayPalButtons
-																createOrder={createOrder}
-																onApprove={onApprove}
-																onError={onError}
-															></PayPalButtons>
+													<div className="mt-2">
+														<PayPalButtons
+															createOrder={createOrder}
+															onApprove={onApprove}
+															onError={onError}
+														></PayPalButtons>
 													</div>
 												</>
 											)}
@@ -258,6 +265,19 @@ const OrderPage = () => {
 									</>
 								)}
 								{/* {MARK AS DELIVERED PLACEHOLDER} */}
+
+								{loadingDeliver && <h3>Loading...</h3>}
+
+								{userInfo &&
+									userInfo.isAdmin &&
+									order.isPaid &&
+									!order.isDelivered && (
+										<div className="">
+											<button className='bg-gray-700 rounded p-3 text-white' onClick={deliverHandler}>
+												Mark as Delivered
+											</button>
+										</div>
+									)}
 							</div>
 						</div>
 					</div>
