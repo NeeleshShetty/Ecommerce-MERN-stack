@@ -35,6 +35,8 @@ const LoginPage = () => {
 
 			const data = await res.json();
 
+			console.log(data.name);
+
 			if (data.success === false) {
 				return toast.error('Invalid Credentials')
 			}

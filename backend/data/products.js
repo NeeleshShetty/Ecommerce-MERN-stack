@@ -11,6 +11,7 @@ const products = [
 		countInStock: 10,
 		rating: 4.5,
 		numReviews: 12,
+		
 	},
 	{
 		

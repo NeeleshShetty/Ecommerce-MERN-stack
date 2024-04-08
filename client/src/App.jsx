@@ -15,7 +15,8 @@ import PaymentPage from './pages/PaymentPage';
 import PlaceOrderPage from './pages/PlaceOrderPage';
 import OrderPage from './pages/OrderPage';
 import ProfilePage from './pages/ProfilePage';
-import OrderListPage from './pages/OrderListPage';
+import OrderListPage from './pages/admin/OrderListPage';
+import ProductListPage from './pages/admin/ProductListPage';
 
 const App = () => {
 	return (
@@ -73,8 +74,10 @@ const App = () => {
 					</Route>
 
 					<Route path='' element={<AdminRoute />} >
-							<Route path='/admin/orderlist' element={<OrderListPage />} />
+						<Route path='/admin/orderlist' element={<OrderListPage />} />
+						<Route path='/admin/productlist' element = {<ProductListPage/>} />
 					</Route>
+
 				</Routes>
 				<Footer />
 			</BrowserRouter>

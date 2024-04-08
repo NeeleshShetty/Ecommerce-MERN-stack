@@ -27,6 +27,7 @@ const ProductPage = () => {
 			const fetchData = async () => {
 				const res = await fetch(`${PRODUCTS_URL}/${productId}`);
 				const data = await res.json();
+				console.log(data);
         setProduct(data);
         setIsLoading(false)
 			};

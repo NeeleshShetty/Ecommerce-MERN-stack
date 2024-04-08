@@ -7,7 +7,8 @@ import jwt from 'jsonwebtoken';
 // @route POST/api/users/login
 // @access public
  const authUser = async (req, res, next) => {
-	 const {name,email, password } = req.body;
+	 const { name, password } = req.body;
+	 console.log(req.body)
 	try {
 		const user = await User.findOne({ name });
 		if (!user) return next(errorHandler(404, 'User not found'));
@@ -17,6 +18,7 @@ import jwt from 'jsonwebtoken';
 
 		const validPassword = bcrypt.compareSync(password, user.password);
 		if (!validPassword) return next(errorHandler(401, 'wrong credentials'));
+
 		const token = jwt.sign({ id: user._id }, process.env.JWT_SECRET);
 
 		const { password: hashedPassword, ...rest } = user._doc;
