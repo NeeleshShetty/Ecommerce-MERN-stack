@@ -8,7 +8,6 @@ import jwt from 'jsonwebtoken';
 // @access public
  const authUser = async (req, res, next) => {
 	 const { name, password } = req.body;
-	 console.log(req.body)
 	try {
 		const user = await User.findOne({ name });
 		if (!user) return next(errorHandler(404, 'User not found'));

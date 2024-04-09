@@ -33,7 +33,7 @@ const ProductPage = () => {
 			};
 			fetchData();
 		} catch (error) {
-			console.log(error.message);
+			toast.error('Product not found')
 		}
 	}, []);
 

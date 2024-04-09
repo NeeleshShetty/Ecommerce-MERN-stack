@@ -13,7 +13,6 @@ import TableHead from '@mui/material/TableHead';
 import TableRow from '@mui/material/TableRow';
 import Paper from '@mui/material/Paper';
 
-
 const ProfilePage = () => {
 	const [name, setName] = useState('');
 	const [email, setEmail] = useState('');
@@ -46,8 +45,7 @@ const ProfilePage = () => {
 		} catch (error) {
 			toast.error('Failed to fetch Orders');
 		}
-  }, []);
-
+	}, []);
 
 	const submitHandler = async (e) => {
 		e.preventDefault();
@@ -194,7 +192,9 @@ const ProfilePage = () => {
 													{order.isDelivered ? (
 														order.deliveredAt.substring(0, 10)
 													) : (
-														<span className="text-red-500 font-bold p-7">X</span>
+														<span className="text-red-500 font-bold p-7">
+															X
+														</span>
 													)}
 												</TableCell>
 												<TableCell>

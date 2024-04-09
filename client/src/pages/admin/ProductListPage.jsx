@@ -1,13 +1,26 @@
-import { Box, Button, CircularProgress, Table, TableBody, TableCell, TableContainer, TableHead, TableRow, Typography } from '@mui/material';
+import {
+	Box,
+	Button,
+	CircularProgress,
+	Table,
+	TableBody,
+	TableCell,
+	TableContainer,
+	TableHead,
+	TableRow,
+	Typography,
+} from '@mui/material';
 import { Edit, Delete, Add } from '@mui/icons-material';
 import { useEffect, useState } from 'react';
 import { toast } from 'react-toastify';
-
+import { Link } from 'react-router-dom';
+import { PRODUCTS_URL } from '../../constants';
+import { useParams } from 'react-router-dom';
 const ProductListPage = () => {
-  const [products, setProducts] = useState([]);
-  const [createProduct, setCreateProduct] = useState({})
-  const [isLoading, setIsLoading] = useState(true);
-  const [error,setError] = useState(false)
+
+	const [products, setProducts] = useState([]);
+	const [isLoading, setIsLoading] = useState(true);
+	const [error, setError] = useState(false);
 	useEffect(() => {
 		try {
 			const fetchData = async () => {
@@ -21,28 +34,36 @@ const ProductListPage = () => {
 			console.log(error.message);
 		}
 	}, []);
-  const deleteHandler = (id) => {
-    
-  }
 
-  const editHandler = (id) => {
-    
-  }
+	const deleteHandler = async(productId) => {
+		try {
+			const res = await fetch(`${PRODUCTS_URL}/${productId}`, {
+				method:'DELETE'
+			})
+			const data = await res.json()
 
-  const createProductHandler = async() => {
-    
-   try {
-     const res = await fetch('/api/products/', {
-       method:"POST"
-     })
-     const data = await res.json()
-     setProducts([...products,data])
-   } catch (error) {
-    toast.error('Error while creating sample data')
-   }
-  } 
+			const updatedProducts = products.filter((product) => product._id !== productId)
+			setProducts(updatedProducts)
+			toast.success(data.message);
 
-  return (
+		} catch (error) {
+			toast.error("Error in deleting the product")
+		}
+	};
+
+	const createProductHandler = async () => {
+		try {
+			const res = await fetch('/api/products/', {
+				method: 'POST',
+			});
+			const data = await res.json();
+			setProducts([...products, data]);
+		} catch (error) {
+			toast.error('Error while creating sample data');
+		}
+	};
+
+	return (
 		<>
 			<Box
 				display="flex"
@@ -88,9 +109,10 @@ const ProductListPage = () => {
 										<Button
 											variant="outlined"
 											color="primary"
-											onClick={() => editHandler(product._id)}
 										>
-											<Edit />
+											<Link to={`/admin/product/${product._id}/edit`}>
+												<Edit />
+											</Link>
 										</Button>
 										<Button
 											variant="outlined"
@@ -108,6 +130,6 @@ const ProductListPage = () => {
 			)}
 		</>
 	);
-}
+};
 
-export default ProductListPage
+export default ProductListPage;

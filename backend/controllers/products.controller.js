@@ -31,13 +31,11 @@ export const getProductbyId = async (req, res, next) => {
 	}
 };
 
-
 // @desc create a Product
 // @route Post/api/products
 // @access Private/Admin
 export const createProduct = async (req, res, next) => {
 	const product = new Product({
-		
 		name: 'Sample Name',
 		price: 0,
 		user: req.user.id,
@@ -46,13 +44,57 @@ export const createProduct = async (req, res, next) => {
 		category: 'Sample Category',
 		countInStock: 0,
 		numReviews: 0,
-		description:'Sample description'
-	})
+		description: 'Sample description',
+	});
 
-	const createdProduct = await product.save()
+	const createdProduct = await product.save();
 
-	res.status(200).json(createdProduct)
+	res.status(200).json(createdProduct);
 	try {
+	} catch (error) {
+		next(error);
+	}
+};
+
+// @desc update a Product
+// @route PUT/api/products/:id
+// @access Private/Admin
+export const updateProduct = async (req, res, next) => {
+	const { name, price, description, image, brand, category, countInStock } =
+		req.body;
+
+	try {
+		const product = await Product.findById(req.params.id);
+
+		if (product) {
+			product.name = name;
+			product.price = price;
+			product.image = image;
+			product.brand = brand;
+			product.category = category;
+			product.countInStock = countInStock;
+			product.description = description;
+		}
+
+		const updatedProduct = await product.save()
+
+		res.status(200).json(updatedProduct)
+	} catch (error) {
+		next(error);
+	}
+};
+
+
+// @desc Delete a Product by Id
+// @route DELETE/api/products/:id
+// @access Private/Admin
+export const deleteProduct = async (req, res, next) => {
+	try {
+		const product = await Product.findById(req.params.id);
+		if (product) {
+			await Product.deleteOne({ _id: product._id })
+			res.status(200).json({message:"Product Deleted Successfully"})
+		}
 		
 	} catch (error) {
 		next(error);
