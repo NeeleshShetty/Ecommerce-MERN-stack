@@ -14,8 +14,7 @@ import { Link } from 'react-router-dom';
 import { toast } from 'react-toastify';
 
 const OrderListPage = () => {
-  const [orders, setOrders] = useState([]);
-  
+	const [orders, setOrders] = useState([]);
 
 	useEffect(() => {
 		try {
@@ -29,9 +28,9 @@ const OrderListPage = () => {
 		} catch (error) {
 			toast.error('Error while fetching the data');
 		}
-  }, []);
-  
- 
+	}, []);
+
+	console.log(orders);
 
 	return (
 		<TableContainer component={Paper}>

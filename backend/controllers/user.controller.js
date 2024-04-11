@@ -35,8 +35,7 @@ import jwt from 'jsonwebtoken';
 // @route POST/api/users/logout
 // @access private
 const logoutUser = async (req, res, next) => {
-	res
-		.clearCookie('access_token')
+	res.clearCookie('access_token')
 		.status(200)
 		.json({ message: 'Logout Successfull' });
 };
@@ -115,29 +114,80 @@ const updateUserProfile = async (req, res,next) => {
 // @desc    Get all users
 // @route   GET /api/users
 // @access  Private/Admin
-const getUsers = async (req, res) => {
-	res.send('get users');
+const getUsers = async (req, res,next) => {
+	try {
+		const users = await User.find({})
+		if (!users) {
+			next(errorHandler(404,"Users not found"))
+		}
+		res.status(200).json(users)
+	} catch (error) {
+		next(error)
+	}
 };
 
 // @desc    Delete user
 // @route   DELETE /api/users/:id
 // @access  Private/Admin
-const deleteUser = async (req, res) => {
-	res.send('delete user');
+const deleteUser = async (req, res,next) => {
+	try {
+		const user = await User.findById(req.params.id)
+	
+		if (user) {
+			if (user.isAdmin) {
+				next(errorHandler(400, 'Cannot delete admin user'));
+			}
+			
+			await User.deleteOne({_id:user._id})
+		} else {
+			next(errorHandler(404,"User not found"))
+		}
+	
+	} catch (error) {
+		next(error)
+	}
 };
 
 // @desc    Get user by ID
 // @route   GET /api/users/:id
 // @access  Private/Admin
-const getUserById = async (req, res) => {
-	res.send('get user by id');
+const getUserById = async (req, res,next) => {
+	try {
+		const user = await User.findById(req.params.id).select('-password')
+		if (!user) {
+			next(errorHandler(404,"User not found"))
+		}
+		res.status(201).json(user)
+	} catch (error) {
+		next(error)
+	}
 };
 
 // @desc    Update user
 // @route   PUT /api/users/:id
 // @access  Private/Admin
-const updateUser = async (req, res) => {
-	res.send('update user');
+const updateUser = async (req, res,next) => {
+	try {
+		const user = await User.findById(req.params.id)
+		if (user) {
+			user.name = req.body.name || user.name
+			user.email = req.body.email || user.email
+			user.isAdmin = Boolean(req.body.isAdmin)
+	
+			const updatedUser = await user.save()
+	
+			res.status(200).json({
+				_id: updatedUser._id,
+				name: updatedUser.name,
+				email: updatedUser.email,
+				isAdmin:updatedUser.isAdmin
+			})
+		} else {
+			next(errorHandler(404,"User not found"))
+		}
+	} catch (error) {
+		next(error)
+	}
 };
 
 export {

@@ -106,14 +106,14 @@ const ProductListPage = () => {
 									<TableCell>{product.category}</TableCell>
 									<TableCell>{product.brand}</TableCell>
 									<TableCell>
-										<Button
+										<Link to={`/admin/product/${product._id}/edit`}><Button
 											variant="outlined"
 											color="primary"
 										>
-											<Link to={`/admin/product/${product._id}/edit`}>
+											
 												<Edit />
-											</Link>
-										</Button>
+											
+										</Button></Link>
 										<Button
 											variant="outlined"
 											color="secondary"

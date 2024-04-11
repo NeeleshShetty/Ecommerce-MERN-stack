@@ -12,7 +12,6 @@ const OrderPage = () => {
 	const { id: orderId } = useParams();
 	const [order, setOrder] = useState({});
 	const [loadingDeliver, setLoadingDeliver] = useState(false);
-	const [deliverOrder, setDeliverOrder] = useState(false);
 
 	const [payOrder, { isLoading: loadingPay }] = usePayOrderMutation();
 
@@ -66,7 +65,7 @@ const OrderPage = () => {
 			try {
 				await payOrder({ orderId, details });
 				refetch();
-				// window.location.reload()
+				window.location.reload()
 				toast.success('Order is paid');
 			} catch (err) {
 				toast.error(err?.data?.message || err.error);
@@ -86,13 +85,7 @@ const OrderPage = () => {
 		});
 	}
 
-	// async function onApproveTest() {
-	// 	await payOrder({ orderId, details: { payer: {} } });
-	// 	refetch();
-
-	// 	toast.success('Order is paid');
-	// }
-
+	
 	function onError(err) {
 		toast.error(err.message);
 	}

@@ -10,7 +10,7 @@ import 'react-toastify/dist/ReactToastify.css';
 import RegisterPage from './pages/RegisterPage';
 import ShippingPage from './pages/ShippingPage';
 import PrivateRoute from './components/PrivateRoute';
-import AdminRoute from './components/AdminRoute'
+import AdminRoute from './components/AdminRoute';
 import PaymentPage from './pages/PaymentPage';
 import PlaceOrderPage from './pages/PlaceOrderPage';
 import OrderPage from './pages/OrderPage';
@@ -18,6 +18,8 @@ import ProfilePage from './pages/ProfilePage';
 import OrderListPage from './pages/admin/OrderListPage';
 import ProductListPage from './pages/admin/ProductListPage';
 import ProductEditPage from './pages/admin/ProductEditPage';
+import UserList from './pages/admin/UserList';
+import UserEditPage from './pages/admin/UserEditPage';
 
 const App = () => {
 	return (
@@ -74,12 +76,31 @@ const App = () => {
 						/>
 					</Route>
 
-					<Route path='' element={<AdminRoute />} >
-						<Route path='/admin/orderlist' element={<OrderListPage />} />
-						<Route path='/admin/productlist' element={<ProductListPage />} />
-						<Route path='/admin/product/:id/edit' element={<ProductEditPage />} />
+					<Route
+						path=""
+						element={<AdminRoute />}
+					>
+						<Route
+							path="/admin/orderlist"
+							element={<OrderListPage />}
+						/>
+						<Route
+							path="/admin/productlist"
+							element={<ProductListPage />}
+						/>
+						<Route
+							path="/admin/product/:id/edit"
+							element={<ProductEditPage />}
+						/>
+						<Route
+							path="/admin/userlist"
+							element={<UserList />}
+						/>
+						<Route
+							path="/admin/user/:id/edit"
+							element={<UserEditPage />}
+						/>
 					</Route>
-
 				</Routes>
 				<Footer />
 			</BrowserRouter>

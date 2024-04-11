@@ -67,17 +67,21 @@ const ProfilePage = () => {
 			});
 
 			const data = await res.json();
-			setOrders(data);
-			// console.log(data);
-
+			toast.success('Updated Successfully');
+			console.log(data);
+s
 			if (data.success === false) {
 				return console.log(data.message);
 			}
 			dispatch(setCredentials(data));
+			setPassword('')
+			setConfirmPassword('')
 		} catch (error) {
-			return toast.error('Error while Updating');
+			return toast.error(error);
 		}
 	};
+
+
 
 	return (
 		<div className="flex flex-row p-5">
@@ -163,7 +167,7 @@ const ProfilePage = () => {
 								<TableHead className="mr-32">
 									<TableRow>
 										<TableCell>ID</TableCell>
-										{/* <TableCell>DATE</TableCell> */}
+										<TableCell>DATE</TableCell>
 										<TableCell>TOTAL</TableCell>
 										<TableCell>PAID</TableCell>
 										<TableCell>DELIVERED</TableCell>
@@ -175,11 +179,11 @@ const ProfilePage = () => {
 										orders.map((order) => (
 											<TableRow key={order._id}>
 												<TableCell>{order._id}</TableCell>
-												{/* <TableCell>
+												<TableCell>
 													{order.createdAt
 														? order.createdAt.substring(0, 10)
 														: 'N/A'}
-												</TableCell> */}
+												</TableCell>
 												<TableCell>{order.totalPrice}</TableCell>
 												<TableCell>
 													{order.isPaid ? (

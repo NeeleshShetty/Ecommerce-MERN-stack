@@ -62,7 +62,7 @@ const DropdownMenu = ({ handleLogout }) => {
 					<FormControl fullWidth>
 						<InputLabel sx={{ color: 'gray' }}>
 							<div className="flex text-[13px] items-center gap-1">
-								<div>{userInfo.name}</div>
+								<div>Admin</div>
 								<div>
 									<FaUser />
 								</div>
