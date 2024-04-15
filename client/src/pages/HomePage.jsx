@@ -20,7 +20,6 @@ const Home = () => {
 				<h1 className="text-center text-3xl h-[100vh] mt-52">Loading...</h1>
 			) : error ? (
 				toast.error(error?.data?.message || error.error)
-					
 			) : (
 				<>
 					<div className="grid grid-cols-2  sm:grid-cols-1 md:grid-cols-3 gap-4 ">
@@ -32,13 +31,14 @@ const Home = () => {
 								<Product product={product} />
 							</div>
 						))}
-							</div>
-							
-					<Paginate
-						pages={data.pages}
-						page={data.page}
-						keyword={keyword ? keyword : ''}
-					/>
+					</div>
+					<div className=" flex justify-center">
+						<Paginate
+							pages={data.pages}
+							page={data.page}
+							keyword={keyword ? keyword : ''}
+						/>
+					</div>
 				</>
 			)}
 		</>

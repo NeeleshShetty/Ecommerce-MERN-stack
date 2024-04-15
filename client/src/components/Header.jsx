@@ -9,12 +9,13 @@ import { useState } from 'react';
 import { toast } from 'react-toastify';
 import { useNavigate } from 'react-router-dom';
 import DropdownMenu from './DropdownMenu';
+import SearchBox from './SearchBox';
 const Header = () => {
 	const [show, setShow] = useState(false);
 	const dispatch = useDispatch();
 	const navigate = useNavigate();
 	const { cartItems } = useSelector((state) => state.cart);
-	const { userInfo } = useSelector((state) => state.auth);
+	// const { userInfo } = useSelector((state) => state.auth);
 	const userExists = localStorage.getItem('userInfo');
 
 	const handleLogout = async () => {
@@ -39,10 +40,14 @@ const Header = () => {
 					<div className="flex items-center justify-between h-16">
 						<Link
 							to="/"
-							className="text-white font-medium"
+							className="text-white font-medium ml-5"
 						>
 							ProShop
 						</Link>
+
+						<div>
+							<SearchBox />
+						</div>
 						<div className="flex gap-4 ">
 							<div className="mt-5 mr-5">
 								<Link
