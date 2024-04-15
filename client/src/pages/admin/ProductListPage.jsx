@@ -15,25 +15,34 @@ import { useEffect, useState } from 'react';
 import { toast } from 'react-toastify';
 import { Link } from 'react-router-dom';
 import { PRODUCTS_URL } from '../../constants';
-import { useParams } from 'react-router-dom';
 const ProductListPage = () => {
 
 	const [products, setProducts] = useState([]);
+
 	const [isLoading, setIsLoading] = useState(true);
 	const [error, setError] = useState(false);
+
+	
+
+
 	useEffect(() => {
-		try {
-			const fetchData = async () => {
+		
+		const fetchData = async () => {
+			try {
 				const res = await fetch(`/api/products`);
 				const data = await res.json();
-				setProducts(data);
+				setProducts(data.products);
 				setIsLoading(false);
-			};
-			fetchData();
-		} catch (error) {
-			console.log(error.message);
+			
+			
+			} catch (error) {
+				console.log(error.message);
+			}
 		}
-	}, []);
+			fetchData();
+
+}, []);
+
 
 	const deleteHandler = async(productId) => {
 		try {
@@ -106,14 +115,14 @@ const ProductListPage = () => {
 									<TableCell>{product.category}</TableCell>
 									<TableCell>{product.brand}</TableCell>
 									<TableCell>
-										<Link to={`/admin/product/${product._id}/edit`}><Button
-											variant="outlined"
-											color="primary"
-										>
-											
+										<Link to={`/admin/product/${product._id}/edit`}>
+											<Button
+												variant="outlined"
+												color="primary"
+											>
 												<Edit />
-											
-										</Button></Link>
+											</Button>
+										</Link>
 										<Button
 											variant="outlined"
 											color="secondary"
@@ -126,6 +135,7 @@ const ProductListPage = () => {
 							))}
 						</TableBody>
 					</Table>
+					
 				</TableContainer>
 			)}
 		</>

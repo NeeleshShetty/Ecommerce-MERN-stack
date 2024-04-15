@@ -1,41 +1,48 @@
 import { useEffect, useState } from "react";
 import Product from "../components/Product";
-const Home = () => {
- 
-  const [products, setProducts] = useState([])
-  const [isLoading, setIsLoading] = useState(true)
-  useEffect(() => {
-   try {
-     const fetchData = async () => {
-       const res = await fetch(`/api/products`)
-       const data = await res.json()
-       setProducts(data)
-       setIsLoading(false)
-     }
-     fetchData()
-   } catch (error) {
-    console.log(error.message);
-   }
-  }, [])
-  
+import {toast} from 'react-toastify'
+import { useParams } from "react-router-dom";
+import Paginate from "../components/Paginate";
+import { useGetProductsQuery } from "../slice/productApiSlice";
 
-  return (
-    <>
-      {isLoading ? (
-        <h1 className="text-center text-3xl h-[100vh] mt-52">Loading...</h1>
-      ) : (
-        <>
-          <div className="grid grid-cols-2  sm:grid-cols-1 md:grid-cols-3 gap-4 ">
-            {products.map((product) => (
-              <div key={product._id} className="bg-white p-4 rounded shadow">
-                <Product product={product} />
-              </div>
-            ))}
-          </div>
-        </>
-      )}
-    </>
-  );
+const Home = () => {
+	const { pageNumber, keyword } = useParams();
+	
+ const { data, isLoading, error } = useGetProductsQuery({
+    keyword,
+    pageNumber,
+ });
+	
+
+	return (
+		<>
+			{isLoading ? (
+				<h1 className="text-center text-3xl h-[100vh] mt-52">Loading...</h1>
+			) : error ? (
+				toast.error(error?.data?.message || error.error)
+					
+			) : (
+				<>
+					<div className="grid grid-cols-2  sm:grid-cols-1 md:grid-cols-3 gap-4 ">
+						{data.products.map((product) => (
+							<div
+								key={product._id}
+								className="bg-white p-4 rounded shadow"
+							>
+								<Product product={product} />
+							</div>
+						))}
+							</div>
+							
+					<Paginate
+						pages={data.pages}
+						page={data.page}
+						keyword={keyword ? keyword : ''}
+					/>
+				</>
+			)}
+		</>
+	);
 };
 
-export default Home;
+export default Home

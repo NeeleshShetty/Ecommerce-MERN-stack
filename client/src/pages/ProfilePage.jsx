@@ -67,12 +67,15 @@ const ProfilePage = () => {
 			});
 
 			const data = await res.json();
-			toast.success('Updated Successfully');
-			console.log(data);
-s
 			if (data.success === false) {
 				return console.log(data.message);
 			}
+			setConfirmPassword('')
+			setPassword('')
+			toast.success('Updated Successfully');
+			
+s
+			
 			dispatch(setCredentials(data));
 			setPassword('')
 			setConfirmPassword('')

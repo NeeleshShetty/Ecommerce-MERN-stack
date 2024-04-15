@@ -1,21 +1,50 @@
-import products from '../data/products.js';
 import Product from '../models/product.model.js';
+import User from '../models/user.model.js';
 import { errorHandler } from '../middleware/errorMiddleware.js';
 
 // @desc Fetch Products
-// @route GET/api/products
+// @route GET/api/products/page
 // @access public
 export const getProducts = async (req, res, next) => {
+	const pageSize = 1;
+	const page = Number(req.query.pageNumber) || 1;
+
+	const keyword = req.query.keyword
+		? { name: { $regex: req.query.keyword, $options: 'i' } }
+		: {};
 	try {
-		const products = await Product.find({});
+		const count = await Product.countDocuments({ ...keyword });
+
+		const products = await Product.find({ ...keyword })
+			.limit(pageSize)
+			.skip(pageSize * (page - 1));
+
 		if (!products) {
 			return errorHandler(404, 'No products found');
 		}
-		return res.status(200).json(products);
+		res
+			.status(200)
+			.json({ products, page, pages: Math.ceil(count / pageSize) });
 	} catch (error) {
 		next(error);
 	}
 };
+
+// // @desc Fetch Products
+// // @route GET/api/products
+// // @access public
+// export const getProducts = async (req, res, next) => {
+// 	try {
+// 		const products = await Product.find({});
+
+// 		if (!products) {
+// 			return errorHandler(404, 'No products found');
+// 		}
+// 		return res.status(200).json({ products });
+// 	} catch (error) {
+// 		next(error);
+// 	}
+// };
 
 // @desc Fetch a product by ID
 // @route GET/api/products/:id
@@ -76,14 +105,13 @@ export const updateProduct = async (req, res, next) => {
 			product.description = description;
 		}
 
-		const updatedProduct = await product.save()
+		const updatedProduct = await product.save();
 
-		res.status(200).json(updatedProduct)
+		res.status(200).json(updatedProduct);
 	} catch (error) {
 		next(error);
 	}
 };
-
 
 // @desc Delete a Product by Id
 // @route DELETE/api/products/:id
@@ -92,10 +120,52 @@ export const deleteProduct = async (req, res, next) => {
 	try {
 		const product = await Product.findById(req.params.id);
 		if (product) {
-			await Product.deleteOne({ _id: product._id })
-			res.status(200).json({message:"Product Deleted Successfully"})
+			await Product.deleteOne({ _id: product._id });
+			res.status(200).json({ message: 'Product Deleted Successfully' });
 		}
-		
+	} catch (error) {
+		next(error);
+	}
+};
+
+// @desc create new review
+// @route POST/api/products/:id/reviews
+// @access Private
+export const createProductReview = async (req, res, next) => {
+	const { rating, comment } = req.body;
+
+	try {
+		const product = await Product.findById(req.params.id);
+		const user = await User.findById(req.user.id);
+
+		if (product) {
+			const alreadyReviewed = product.reviews.find(
+				(product) => product.user.toString() === req.user.id.toString()
+			);
+
+			if (alreadyReviewed) {
+				res.status(400);
+				throw new Error('Product already reviewed by You');
+			}
+
+			const review = {
+				name: user.name,
+				rating: Number(rating),
+				comment,
+				user: req.user.id,
+			};
+
+			product.reviews.push(review);
+
+			product.numReviews = product.reviews.length;
+
+			product.rating =
+				product.reviews.reduce((acc, item) => item.rating + acc, 0) /
+				product.reviews.length;
+
+			await product.save();
+			res.status(201).json({ message: 'Review added' });
+		}
 	} catch (error) {
 		next(error);
 	}

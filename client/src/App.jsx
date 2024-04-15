@@ -34,6 +34,18 @@ const App = () => {
 						element={<Home />}
 					/>
 					<Route
+						path="/search/:keyword"
+						element={<Home />}
+					/>
+					<Route
+						path="/page/:pageNumber"
+						element={<Home />}
+					/>
+					<Route
+						path="/search/:keyword/page/:pageNumber"
+						element={<Home />}
+					/>
+					<Route
 						path="/product/:id"
 						element={<ProductPage />}
 					/>
@@ -86,6 +98,10 @@ const App = () => {
 						/>
 						<Route
 							path="/admin/productlist"
+							element={<ProductListPage />}
+						/>
+						<Route
+							path="/admin/productlist/:pageNumber"
 							element={<ProductListPage />}
 						/>
 						<Route

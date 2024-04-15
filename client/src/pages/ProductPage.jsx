@@ -7,12 +7,19 @@ import { useState } from 'react';
 import { addToCart } from '../slice/cartSlice';
 import { useEffect } from 'react';
 import { PRODUCTS_URL } from '../constants';
+import { useSelector } from 'react-redux';
+import { Rating } from '@mui/material';
+import { toast } from 'react-toastify';
 
 const ProductPage = () => {
 	const [qty, setQty] = useState(1);
-  const { id: productId } = useParams(); //useParams is a hook that gets the parameters from the URL. It returns an object with keys
-  const [isLoading ,setIsLoading] = useState(true)
+	const { userInfo } = useSelector((state) => state.auth);
+	const { id: productId } = useParams(); //useParams is a hook that gets the parameters from the URL. It returns an object with keys
+	const [isLoading, setIsLoading] = useState(true);
 	const [product, setProduct] = useState({});
+	const [loadingProductReview, setLoadingProductReview] = useState(false);
+	const [rating, setRating] = useState(0);
+	const [comment, setComment] = useState('');
 	const dispatch = useDispatch();
 	const navigate = useNavigate();
 
@@ -22,26 +29,57 @@ const ProductPage = () => {
 	};
 
 	useEffect(() => {
-    try {
-      
+		try {
 			const fetchData = async () => {
 				const res = await fetch(`${PRODUCTS_URL}/${productId}`);
 				const data = await res.json();
-				console.log(data);
-        setProduct(data);
-        setIsLoading(false)
+
+				setProduct(data);
+				setIsLoading(false);
 			};
 			fetchData();
 		} catch (error) {
-			toast.error('Product not found')
+			toast.error('Product not found');
 		}
 	}, []);
+
+	const submitHandler = async (e) => {
+		e.preventDefault();
+
+		try {
+			const res = await fetch(`/api/products/${productId}/review`, {
+				method: 'POST',
+				headers: {
+					'Content-Type': 'application/json',
+				},
+				body: JSON.stringify({
+					productId,
+					rating,
+					comment,
+				}),
+			});
+
+			const data = await res.json();
+			console.log(data);
+			if (data.success === false) {
+				return toast.error(data.message)
+			}
+			setComment(data.comment)
+			setRating(data.rating)
+			toast.success('Review Submitted');
+
+			setRating(0), setComment('');
+			window.location.reload()
+		} catch (error) {
+			toast.error('Error while Submitting the Review');
+		}
+	};
 
 	return (
 		<>
 			{isLoading ? (
 				<h1 className="text-center text-3xl h-[100vh] mt-52">Loading...</h1>
-			): (
+			) : (
 				<>
 					<div className="bg-gray-100 p-3">
 						<div className="container mx-auto">
@@ -134,6 +172,116 @@ const ProductPage = () => {
 											Add To Cart
 										</button>
 									</div>
+								</div>
+							</div>
+							{/* Reviews */}
+							<div className="">
+								<div className="review flex flex-col md:w-1/2 items-center mt-5">
+									<h2 className="text-2xl font-bold text-gray-500 bg-slate-200 w-80 text-left rounded p-2">
+										Reviews
+									</h2>
+									{product.reviews.length === 0 ? (
+										<p className="border-b  py-2 bg-blue-200 w-80 mt-2 text-left p-2 text-black font-semibold rounded">
+											No Reviews
+										</p>
+									) : (
+										<>
+											<ul className="list-none p-0">
+												{product.reviews.map((review) => (
+													<li
+														key={review._id}
+														className="border-b border-red-200 py-2 p-3 bg-slate-200 w-80 "
+													>
+														<strong className="font-bold">{review.name}</strong>
+														<br />
+														<Rating
+															value={review.rating}
+															readOnly
+														/>
+														<p>{review.createdAt.substring(0, 10)}</p>
+
+														<div className="bg-gray-300 p-1 rounded">
+															<p>{review.comment}</p>
+														</div>
+													</li>
+												))}
+											</ul>
+										</>
+									)}
+									<ul>
+										<li className="border-b border-gray-200 py-2">
+											<h2 className="text-xl font-bold bg-slate-200 w-80 p-2 rounded text-center mt-10">
+												Write a Customer Review
+											</h2>
+
+											{loadingProductReview && <Loader />}
+
+											{userInfo ? (
+												<form onSubmit={submitHandler}>
+													<div className="my-2">
+														<label
+															className="block text-sm font-bold mb-2"
+															htmlFor="rating"
+														>
+															Rating
+														</label>
+														<select
+															className="block appearance-none w-full bg-white border border-gray-200 text-gray-700 py-3 px-4 pr-8 rounded leading-tight focus:outline-none focus:bg-white focus:border-gray-500"
+															required
+															value={rating}
+															onChange={(e) => setRating(e.target.value)}
+															id="rating"
+														>
+															<option value="">Select...</option>
+															<option value="1">1 - Poor</option>
+															<option value="2">2 - Fair</option>
+															<option value="3">3 - Good</option>
+															<option value="4">4 - Very Good</option>
+															<option value="5">5 - Excellent</option>
+														</select>
+													</div>
+													<div className="my-2">
+														<label
+															className="block text-sm font-bold mb-2"
+															htmlFor="comment"
+														>
+															Comment
+														</label>
+														<textarea
+															className="shadow appearance-none border rounded w-full py-2 px-3 text-gray-700 leading-tight focus:outline-none focus:shadow-outline"
+															rows="3"
+															required
+															value={comment}
+															onChange={(e) => setComment(e.target.value)}
+															id="comment"
+														></textarea>
+													</div>
+													<button
+														className={`mt-2 ${
+															loadingProductReview
+																? 'opacity-50 cursor-not-allowed'
+																: ''
+														} bg-blue-500 hover:bg-blue-700 text-white font-bold py-2 px-4 rounded`}
+														type="submit"
+														disabled={loadingProductReview}
+													>
+														Submit
+													</button>
+												</form>
+											) : (
+												<p>
+													Please
+													<a
+														href="/login"
+														className="text-blue-500 hover:underline"
+													>
+														sign in
+													</a>
+													to write a review
+												</p>
+											)}
+										</li>
+									</ul>
 								</div>
 							</div>
 						</div>
