@@ -10,6 +10,7 @@ import { PRODUCTS_URL } from '../constants';
 import { useSelector } from 'react-redux';
 import { Rating } from '@mui/material';
 import { toast } from 'react-toastify';
+import Meta from '../components/Meta';
 
 const ProductPage = () => {
 	const [qty, setQty] = useState(1);
@@ -62,14 +63,14 @@ const ProductPage = () => {
 			const data = await res.json();
 			console.log(data);
 			if (data.success === false) {
-				return toast.error(data.message)
+				return toast.error(data.message);
 			}
-			setComment(data.comment)
-			setRating(data.rating)
+			setComment(data.comment);
+			setRating(data.rating);
 			toast.success('Review Submitted');
 
 			setRating(0), setComment('');
-			window.location.reload()
+			window.location.reload();
 		} catch (error) {
 			toast.error('Error while Submitting the Review');
 		}
@@ -77,6 +78,7 @@ const ProductPage = () => {
 
 	return (
 		<>
+			{window.scrollTo(0, 0)}
 			{isLoading ? (
 				<h1 className="text-center text-3xl h-[100vh] mt-52">Loading...</h1>
 			) : (
@@ -186,6 +188,10 @@ const ProductPage = () => {
 										</p>
 									) : (
 										<>
+											<Meta
+												title={product.name}
+												description={product.description}
+											/>
 											<ul className="list-none p-0">
 												{product.reviews.map((review) => (
 													<li

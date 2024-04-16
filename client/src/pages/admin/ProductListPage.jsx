@@ -26,22 +26,21 @@ const ProductListPage = () => {
 
 
 	useEffect(() => {
-		
-		const fetchData = async () => {
-			try {
-				const res = await fetch(`/api/products`);
-				const data = await res.json();
-				setProducts(data.products);
-				setIsLoading(false);
-			
-			
-			} catch (error) {
-				console.log(error.message);
-			}
-		}
-			fetchData();
+  const fetchData = async () => {
+    try {
+      const res = await fetch(`/api/products/page`);
+      const data = await res.json();
+      setProducts(data);
+      setIsLoading(false);
+    } catch (error) {
+      console.log(error.message);
+      setError(true);
+    }
+  }
+  fetchData();
+}, []); // Empty dependency array
 
-}, []);
+	
 
 
 	const deleteHandler = async(productId) => {

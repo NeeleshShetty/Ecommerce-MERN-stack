@@ -31,20 +31,33 @@ export const getProducts = async (req, res, next) => {
 };
 
 // // @desc Fetch Products
-// // @route GET/api/products
+// // @route GET/api/products/page
 // // @access public
-// export const getProducts = async (req, res, next) => {
-// 	try {
-// 		const products = await Product.find({});
+export const getTopProducts = async (req, res, next) => {
+	try {
+		const products = await Product.find({}).sort({rating:-1}).limit(3)
+		return res.status(200).json( products );
+	} catch (error) {
+		next(error);
+	}
+};
 
-// 		if (!products) {
-// 			return errorHandler(404, 'No products found');
-// 		}
-// 		return res.status(200).json({ products });
-// 	} catch (error) {
-// 		next(error);
-// 	}
-// };
+
+// // @desc get Top rated Products
+// // @route GET/api/products/top
+// // @access public
+export const getProductsAdmin = async (req, res, next) => {
+	try {
+		const products = await Product.find({});
+
+		if (!products) {
+			return errorHandler(404, 'No products found');
+		}
+		return res.status(200).json( products );
+	} catch (error) {
+		next(error);
+	}
+};
 
 // @desc Fetch a product by ID
 // @route GET/api/products/:id

@@ -6,13 +6,15 @@ import {
 	updateProduct,
 	deleteProduct,
 	createProductReview,
-	// getProductsByPage,
+	getProductsAdmin,
+	getTopProducts,	
 } from '../controllers/products.controller.js';
 import {verifyToken,admin} from '../middleware/authMiddleware.js'
 const router = express.Router()
 
 router.get('/', getProducts);
-// router.get('/page', getProductsByPage)
+router.get('/top',getTopProducts)
+router.get('/page',verifyToken,admin, getProductsAdmin)
 router.get('/:id', getProductbyId)
 router.post('/', verifyToken, admin, createProduct);
 router.put('/:id', verifyToken, admin, updateProduct)
