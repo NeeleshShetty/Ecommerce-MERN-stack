@@ -69,7 +69,7 @@ const Header = () => {
 
 							<div>
 								{userExists ? (
-									<div className="text-white flex gap-4">
+									<div className="text-white gap-4 hidden md:inline">
 										<DropdownMenu handleLogout={handleLogout} />
 									</div>
 								) : (
