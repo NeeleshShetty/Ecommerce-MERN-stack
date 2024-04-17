@@ -78,7 +78,7 @@ const ProductPage = () => {
 
 	return (
 		<>
-			{window.scrollTo(0, 0)}
+			
 			{isLoading ? (
 				<h1 className="text-center text-3xl h-[100vh] mt-52">Loading...</h1>
 			) : (

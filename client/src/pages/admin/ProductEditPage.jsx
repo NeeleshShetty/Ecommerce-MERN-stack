@@ -1,11 +1,19 @@
-import React, { useEffect, useState } from 'react';
+import React, { useEffect, useRef, useState } from 'react';
 import { Link, useParams, useNavigate, redirect } from 'react-router-dom';
+import {
+	getDownloadURL,
+	getStorage,
+	ref,
+	uploadBytesResumable,
+} from 'firebase/storage';
+import { app } from '../../firebase';
 import { toast } from 'react-toastify';
 import { PRODUCTS_URL } from '../../constants';
 
 const ProductEditPage = () => {
 	const { id: productId } = useParams();
 	const navigate = useNavigate();
+	const fileRef = useRef()
 
 	const [loadingUpload, setLoadingUpload] = useState(false);
 	const [isLoading, setIsLoading] = useState(false);
@@ -16,6 +24,9 @@ const ProductEditPage = () => {
 	const [category, setCategory] = useState('');
 	const [countInStock, setCountInStock] = useState(0);
 	const [description, setDescription] = useState('');
+
+	const [imagePercent, setImagePercent] = useState(0);
+	const [imageError, setImageError] = useState(null);
 
 	useEffect(() => {
 		try {
@@ -38,9 +49,35 @@ const ProductEditPage = () => {
 		}
 	}, []);
 
-	
-    
-    
+	useEffect(() => {
+		if (image) {
+			uploadFileHandler(image);
+		}
+	}, [image]);
+
+	const uploadFileHandler = async (image) => {
+		const storage = getStorage(app);
+		const fileName = new Date().getTime() + image.name;
+		// console.log(image.name);
+		const storageRef = ref(storage, fileName);
+		const uploadTask = uploadBytesResumable(storageRef, image);
+		uploadTask.on(
+			'state_changed',
+			(snapshot) => {
+				const progress =
+					(snapshot.bytesTransferred / snapshot.totalBytes) * 100;
+				setImagePercent(progress);
+				console.log('Upload is' + progress + '% done');
+			},
+			(error) => {
+				setImageError(true);
+			},
+			() =>
+				getDownloadURL(uploadTask.snapshot.ref).then((downloadUrl) => {
+					setImage( downloadUrl );
+				})
+		);
+	};
 
 	const submitHandler = async (e) => {
 		e.preventDefault();
@@ -62,7 +99,6 @@ const ProductEditPage = () => {
 				}),
 			});
 
-			const data = await res.json();
 			toast.success('Updated Successfully');
 			navigate('/admin/productlist');
 		} catch (error) {
@@ -70,29 +106,28 @@ const ProductEditPage = () => {
 		}
 	};
 
-    const uploadFileHandler = async (e) => {
-			if (!image) {
-				return toast.error('Please select an image first.');
-			}
+	// const uploadFileHandler = async (e) => {
+	// 		if (!image) {
+	// 			return toast.error('Please select an image first.');
+	// 		}
 
-			const formData = new FormData();
-			formData.append('image', e.target.files[0]);
+	// 		const formData = new FormData();
+	// 		formData.append('image', e.target.files[0]);
 
+	// 		try {
+	// 			const res = await fetch('/api/uploads', {
+	// 				method: 'POST',
+	// 				body: formData,
+	// 			});
+	// 			const data = await res.json();
+	// 			setImage(data.image);
+	// 			toast.success(data.message);
+	// 		} catch (error) {
+	// 			toast.error(error.message);
+	// 		}
+	// };
 
-			try {
-				const res = await fetch('/api/uploads', {
-					method: 'POST',
-					body: formData,
-				});
-				const data = await res.json();
-				setImage(data.image);
-				toast.success(data.message);
-			} catch (error) {
-				toast.error(error.message);
-			}
-    };
-    
-    console.log(image);
+	console.log(image);
 
 	return (
 		<>
@@ -155,7 +190,7 @@ const ProductEditPage = () => {
 							onChange={(e) => setBrand(e.target.value)}
 						/>
 						<div className="flex flex-col space-y-2">
-							<label
+							{/* <label
 								htmlFor="image"
 								className="font-bold"
 							>
@@ -175,7 +210,36 @@ const ProductEditPage = () => {
 								type="file"
 								className="border border-gray-300 p-2 rounded"
 							/>
-							{loadingUpload && <div className="loader"></div>}
+							{loadingUpload && <div className="loader"></div>} */}
+							<input
+								type="file"
+								ref={fileRef}
+								hidden
+								accept="image/*"
+								onChange={(e) => setImage(e.target.files[0])}
+							/>
+							<img
+								onClick={() => fileRef.current.click()}
+								src={image}
+								alt="profilepic"
+								className="h-24 w-24 rounded-full self-center cursor-pointer object-cover m4-2"
+							/>
+
+							<p className="text-sm self-center">
+								{imageError ? (
+									<span className="text-red-700">
+										Error uploading image (file size must be less than 2 MB)
+									</span>
+								) : imagePercent > 0 && imagePercent < 100 ? (
+									<span className="text-slate-700">{`Uploading: ${imagePercent} %`}</span>
+								) : imagePercent === 100 ? (
+									<span className="text-green-500">
+										Image uploaded successfully
+									</span>
+								) : (
+									''
+								)}
+							</p>
 						</div>
 						<label
 							htmlFor="countinstock"

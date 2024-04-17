@@ -1,4 +1,3 @@
-import { useEffect, useState } from 'react';
 import Product from '../components/Product';
 import { toast } from 'react-toastify';
 import { useParams } from 'react-router-dom';
@@ -17,7 +16,6 @@ const Home = () => {
 
 	return (
 		<>
-			{window.scrollTo(0, 0)}
 			{isLoading ? (
 				<h1 className="text-center text-3xl h-[100vh] mt-52">Loading...</h1>
 			) : error ? (
