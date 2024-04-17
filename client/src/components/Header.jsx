@@ -4,7 +4,7 @@ import { Link } from 'react-router-dom';
 import { useSelector, useDispatch } from 'react-redux';
 import { Badge, Menu, MenuItem, Paper } from '@mui/material';
 import { logout } from '../slice/authSlice';
-import { clearCartItems } from '../slice/cartSlice';
+import { clearCartItems, clearShippingAddress } from '../slice/cartSlice';
 import { useState } from 'react';
 import { toast } from 'react-toastify';
 import { useNavigate } from 'react-router-dom';
@@ -26,6 +26,8 @@ const Header = () => {
 
 			dispatch(logout());
 			dispatch(clearCartItems());
+			dispatch(clearShippingAddress());
+			localStorage.clear()
 			navigate('/login');
 			toast.success('Logout Successful');
 		} catch (error) {

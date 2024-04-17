@@ -12,6 +12,8 @@ import { useEffect } from 'react';
 import { useState } from 'react';
 import { Link } from 'react-router-dom';
 import { toast } from 'react-toastify';
+import DoneIcon from '@mui/icons-material/Done';
+import CloseIcon from '@mui/icons-material/Close';
 
 const OrderListPage = () => {
 	const [orders, setOrders] = useState([]);
@@ -42,8 +44,8 @@ const OrderListPage = () => {
 					<TableRow>
 						<TableCell>ID</TableCell>
 						<TableCell>USER</TableCell>
-						<TableCell>DATE</TableCell>
 						<TableCell>TOTAL</TableCell>
+						<TableCell>DATE</TableCell>
 						<TableCell>PAID</TableCell>
 						<TableCell>DELIVERED</TableCell>
 						<TableCell></TableCell>
@@ -59,14 +61,21 @@ const OrderListPage = () => {
 								{order.isPaid ? (
 									order.paidAt.substring(0, 10)
 								) : (
-									<span style={{ color: 'red' }}>X</span>
+									<span style={{ color: 'red' }}><CloseIcon /></span>
+								)}
+							</TableCell>
+							<TableCell>
+								{order.isPaid ? (
+									<span style={{ color: 'green' }}><DoneIcon /></span>
+								) : (
+									<span style={{ color: 'red' }}><CloseIcon /></span>
 								)}
 							</TableCell>
 							<TableCell>
 								{order.isDelivered ? (
 									order.deliveredAt.substring(0, 10)
 								) : (
-									<span style={{ color: 'red' }}>X</span>
+									<span className='text-center' style={{ color: 'red' }}><CloseIcon /></span>
 								)}
 							</TableCell>
 							<TableCell>

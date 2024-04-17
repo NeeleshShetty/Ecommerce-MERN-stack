@@ -106,26 +106,7 @@ const ProductEditPage = () => {
 		}
 	};
 
-	// const uploadFileHandler = async (e) => {
-	// 		if (!image) {
-	// 			return toast.error('Please select an image first.');
-	// 		}
 
-	// 		const formData = new FormData();
-	// 		formData.append('image', e.target.files[0]);
-
-	// 		try {
-	// 			const res = await fetch('/api/uploads', {
-	// 				method: 'POST',
-	// 				body: formData,
-	// 			});
-	// 			const data = await res.json();
-	// 			setImage(data.image);
-	// 			toast.success(data.message);
-	// 		} catch (error) {
-	// 			toast.error(error.message);
-	// 		}
-	// };
 
 	console.log(image);
 
@@ -189,39 +170,25 @@ const ProductEditPage = () => {
 							placeholder="Brand"
 							onChange={(e) => setBrand(e.target.value)}
 						/>
-						<div className="flex flex-col space-y-2">
-							{/* <label
-								htmlFor="image"
-								className="font-bold"
+						<div className="flex flex-col space-y-2 ">
+							<label
+								htmlFor="brand"
+								className="font-semibold text-gray-600"
 							>
 								Image
-							</label>
-							<input
-								id="image"
-								type="text"
-								placeholder="Enter image url"
-								value={image}
-								onChange={(e) => setImage(e.target.value)}
-								className="border border-gray-300 p-2 rounded"
-							/>
-							<input
-								label="Choose File"
-								onChange={uploadFileHandler}
-								type="file"
-								className="border border-gray-300 p-2 rounded"
-							/>
-							{loadingUpload && <div className="loader"></div>} */}
-							<input
+								</label>
+								<div className='border flex justify-center p-2 flex-col'>
+									<input
 								type="file"
 								ref={fileRef}
 								hidden
 								accept="image/*"
 								onChange={(e) => setImage(e.target.files[0])}
 							/>
-							<img
+							<img 
 								onClick={() => fileRef.current.click()}
 								src={image}
-								alt="profilepic"
+								alt="productImage"
 								className="h-24 w-24 rounded-full self-center cursor-pointer object-cover m4-2"
 							/>
 
@@ -240,6 +207,8 @@ const ProductEditPage = () => {
 									''
 								)}
 							</p>
+								</div>
+							
 						</div>
 						<label
 							htmlFor="countinstock"

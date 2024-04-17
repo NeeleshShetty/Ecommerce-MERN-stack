@@ -23,7 +23,7 @@ const Home = () => {
 			) : (
 				<>
 					<Meta />
-					<div className="w-[500px] h-96 mb-20 relative left-96">
+					<div className="w-[500px] max-h-[400px] mb-20 relative left-96">
 						<ProductCarousel />
 					</div>
 

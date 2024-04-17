@@ -8,7 +8,7 @@ const ProductCarousel = () => {
 
     return isLoading ? null : (
         
-		<Carousel className="bg-primary mb-4 mt-5 bg-contain">
+		<Carousel className="bg-primary mb-4 mt-5 bg-contain max-h-[500px]">
 			{products.map((product) => (
 				<Paper key={product._id}>
 					<Link to={`/product/${product._id}`}>

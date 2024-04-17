@@ -114,7 +114,7 @@ const ProductPage = () => {
 										</p>
 									</div>
 								</div>
-								<div className="sm:w-1/4 sm:mt-28">
+								<div className="sm:w-1/4 sm:mt-[5rem]">
 									<div className="bg-white p-4 rounded shadow">
 										<p className="text-gray-600">
 											Price: <strong>${product.price}</strong>

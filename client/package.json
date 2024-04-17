@@ -19,6 +19,7 @@
     "@reduxjs/toolkit": "^2.2.2",
     "axios": "^1.6.7",
     "bootstrap": "^5.3.3",
+    "ecommerce-website-mern": "file:..",
     "firebase": "^10.11.0",
     "flowbite": "^2.3.0",
     "flowbite-react": "^0.7.5",
