@@ -62,7 +62,7 @@ npm install
 
 ```
 
-# Run frontend (:3000) & backend (:5000)
+# Run frontend (:5173)(using Vite) & backend (:5000/3000)
 npm run dev
 
 # Run backend only
