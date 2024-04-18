@@ -20,6 +20,7 @@ import ProductListPage from './pages/admin/ProductListPage';
 import ProductEditPage from './pages/admin/ProductEditPage';
 import UserList from './pages/admin/UserList';
 import UserEditPage from './pages/admin/UserEditPage';
+import SearchPage from './pages/SearchPage';
 
 const App = () => {
 	return (
@@ -35,7 +36,7 @@ const App = () => {
 					/>
 					<Route
 						path="/search/:keyword"
-						element={<Home />}
+						element={<SearchPage />}
 					/>
 					<Route
 						path="/page/:pageNumber"
@@ -43,7 +44,7 @@ const App = () => {
 					/>
 					<Route
 						path="/search/:keyword/page/:pageNumber"
-						element={<Home />}
+						element={<SearchPage />}
 					/>
 					<Route
 						path="/product/:id"
@@ -61,6 +62,7 @@ const App = () => {
 						path="/register"
 						element={<RegisterPage />}
 					/>
+					
 
 					<Route
 						path=""
